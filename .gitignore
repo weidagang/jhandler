@@ -14,5 +14,5 @@ hs_err_pid*
 bin/
 gen/
 
-# eclipse settings
+# eclipse .settings
 .settings
