@@ -53,15 +53,11 @@ public class MessageQueue {
     
     /** Enqueues a message at the front of this queue */
     public boolean enqueueAtFront(MessageExt msg) {
-        MessageExt newMsg = null;
-        
         synchronized (mSortedList) {
             final MessageExt front = mSortedList.peekFirst();
             final long when = (null == front ? 0 : front.when - 1);
-            newMsg = new MessageExt(msg.target, msg.message, when);
-        }
-        
-        return enqueue(newMsg);
+            return enqueue(new MessageExt(msg.target, msg.message, when));
+        }        
     }
 
     /** Returns next message in the queue (may block) */
