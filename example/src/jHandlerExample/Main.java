@@ -4,10 +4,19 @@ import jhandler.Handler;
 import jhandler.Looper;
 import jhandler.Message;
 
-class Example1 {
-    static final private int MAX_ROUND = 10;
-    static volatile private Handler mPingHandler;
-    static volatile private Handler mPongHandler;
+/**
+ * Ping Pong example.
+ * 
+ * <p> 2 looper threads ping and pong each other by sending message to the peer's handler.
+ * The looper quits after MAX_ROUNDs.
+ * 
+ * @author Dagang Wei
+ */
+class PingPonExample {
+    private static final int MAX_ROUND = 10;
+
+    private static volatile Handler mPingHandler;
+    private static volatile Handler mPongHandler;
     
     static class PingThread extends Thread {
         @Override
@@ -23,7 +32,7 @@ class Example1 {
                     Message m = new Message();
                     m.what = 0;
                     m.arg1 = msg.arg1 + 1;
-                    mPongHandler.sendMessageDelayed(m, 2 * 1000);                        
+                    mPongHandler.sendMessageDelayed(m, 2 * 1000);
                 }
             };
 
@@ -52,12 +61,12 @@ class Example1 {
                 public void handleMessage(Message msg) {
                     System.out.println("Pong: received message, what=" + msg.what + ", arg1=" + msg.arg1);
                     if (msg.arg1 >= MAX_ROUND) {
-                        Looper.myLooper().quit();                    
+                        Looper.myLooper().quit();
                     }
                     Message m = new Message();
                     m.what = 1;
                     m.arg1 = msg.arg1 + 1;
-                    mPingHandler.sendMessageDelayed(m, 2 * 1000);                        
+                    mPingHandler.sendMessageDelayed(m, 2 * 1000);
                 }
             };
             Looper.loop();
@@ -65,10 +74,10 @@ class Example1 {
     }
 
     public static void run() throws InterruptedException {
-        PingThread pingThread = new PingThread();        
+        PingThread pingThread = new PingThread();
         PongThread pongThread = new PongThread();
         pingThread.start();
-        pongThread.start();        
+        pongThread.start();
         pingThread.join();
         pongThread.join();
         System.out.println("finished");
@@ -78,6 +87,6 @@ class Example1 {
 
 public class Main {
     public static void main(String[] argv) throws InterruptedException {
-        Example1.run();
+        PingPonExample.run();
     }
 }

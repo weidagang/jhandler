@@ -4,21 +4,31 @@ import jhandler.Handler;
 import jhandler.Message;
 
 /**
- * Message used internally
+ * This class wraps the Message or Runnable object and adds related information to it.
+ * One and only one of <code>message</code> and <code>callback</code> must be present.
  */
 public final class MessageExt {
-    public final Handler target;
+    /** The original message object passed in from public interfaces of Handler. */
     public final Message message;
+
+    /** The original callback object passed in from public interfaces of Handler. */
     public final Runnable callback;
+
+    /** The target handler this message is sending to. */
+    public final Handler target;
+
+    /** When should this message / callback be handled. */
     public final long when;
 
-    public MessageExt(Handler target, Message msg, long when) {
+    /** Constructor for message object. */
+    public MessageExt(Handler target, Message message, long when) {
         this.target = target;
-        this.message = msg;
+        this.message = message;
         this.callback = null;
         this.when = when;
     }
 
+    /** Constructor for callback object */
     public MessageExt(Handler target, Runnable callback, long when) {
         this.target = target;
         this.message = null;

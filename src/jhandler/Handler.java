@@ -7,14 +7,17 @@ import jhandler.internal.TimeUtils;
 /**
  * Handler to send and handle message.
  * 
- * <p>
- * Message can be sent from any thread to this handler, while message handling
- * is always in the Looper thread.
+ * <p> Message can be sent from any thread to this handler, while message handling
+ * is always in the Looper thread hosting this handler.
  * 
- * @author weidagang@gmail.com (Dagang Wei)
+ * @author Dagang Wei
  */
 public class Handler {
-    private final MessageQueue mQueue = Looper.myQueue();
+    private final MessageQueue mQueue;
+
+    public Handler() {
+        this.mQueue = Looper.myQueue();
+    }
 
     /** Subclass must override this method to receive messages */
     public void handleMessage(Message msg) {
@@ -43,8 +46,7 @@ public class Handler {
 
     /** Sends message to this handler which will be handled after the delay */
     public final boolean sendMessageDelayed(Message msg, long delayMillis) {
-        return mQueue.enqueue(new MessageExt(this, msg, TimeUtils.uptime()
-                + delayMillis));
+        return mQueue.enqueue(new MessageExt(this, msg, TimeUtils.uptime() + delayMillis));
     }
 
     /**
@@ -80,8 +82,7 @@ public class Handler {
      * amount of time elapses.
      */
     public final boolean postDelayed(Runnable r, long delayMillis) {
-        MessageExt msg = new MessageExt(this, r, TimeUtils.uptime()
-                + delayMillis);
+        MessageExt msg = new MessageExt(this, r, TimeUtils.uptime() + delayMillis);
         return mQueue.enqueue(msg);
     }
 

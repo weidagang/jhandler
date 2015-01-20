@@ -6,15 +6,19 @@ import jhandler.internal.MessageQueue;
 /**
  * Looper used to run a message loop for a thread. A looper composes a message
  * queue.
+ * 
+ * @author Dagang Wei
  */
 public class Looper {
+    // Thread local holder for the looper object.
     private static final ThreadLocal<Looper> sLooperHolder = new ThreadLocal<Looper>();
 
-    // every looper is associated with a message queue
-    final MessageQueue mQueue = new MessageQueue();
+    // Message queue associated with this looper
+    private final MessageQueue mQueue;
 
-    // no public constructor
+    // No public constructor
     private Looper() {
+        this.mQueue = new MessageQueue();
     }
 
     /**
@@ -22,14 +26,13 @@ public class Looper {
      */
     public static final void prepare() {
         if (sLooperHolder.get() != null) {
-            throw new RuntimeException(
-                    "Only one Looper may be created per thread");
+            throw new RuntimeException("Only one Looper may be created per thread");
         }
         sLooperHolder.set(new Looper());
     }
 
     /**
-     * Runs the message loop in this thread.
+     * Runs message loop in this thread.
      */
     public static final void loop() {
         final MessageQueue queue = myQueue();
@@ -62,7 +65,7 @@ public class Looper {
     }
 
     /** Gets the message queue associated with the loop of the current thread */
-    static final MessageQueue myQueue() {
+    static MessageQueue myQueue() {
         return myLooper().mQueue;
     }
 }
